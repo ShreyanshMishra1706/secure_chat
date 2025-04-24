@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Chat Application{% endblock %}</title>
+    
+    <!-- Import FontAwesome for Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e5ddd5; /* WhatsApp-like beige */
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #075E54; /* WhatsApp green */
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Logo Placeholder */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            width: 40px; /* Adjust as needed */
+            height: 40px;
+            border-radius: 50%; /* Circular shape */
+            background: white; /* Temporary background */
+        }
+
+        .logo span {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links li {
+            display: inline;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 8px 12px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-links a:hover {
+            background: #128C7E;
+        }
+
+        /* Main Content Area */
+        .container {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <!-- Logo Section -->
+        <div class="logo">
+            <img src="{% static "images/1.jpg" %}" alt="Secure_Chat_Logo"> 
+            <span>Secure Chat</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <ul class="nav-links">
+            <li><a href="{% url 'chat:index' %}"><i class="fas fa-home"></i> Home</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'chat:user_list' %}"><i class="fas fa-comments"></i> Find & Chat</a></li>
+            {% endif %}
+            <li><a href="{% url 'chat:about' %}"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="{% url 'chat:register' %}"><i class="fas fa-comments"></i> Register</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'chat:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'chat:login' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Content from Child Templates -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>

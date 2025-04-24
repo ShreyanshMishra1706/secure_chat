@@ -1,0 +1,534 @@
+{% extends "base.html" %}
+
+{% block title %}Chat Room{% endblock %}
+
+{% block content %}
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e5ddd5; /* Beige background now applied to chat area */
+        }
+
+        /* Full-Screen Chat Container */
+        .chat-container {
+            width: 100%;
+            height: calc(100vh - 60px); /* Adjust for navbar height */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fixed Header */
+        .chat-header {
+            background: #075E54;
+            color: white;
+            padding: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Scrollable Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Message Bubbles */
+        .message {
+            max-width: 75%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 1rem;
+            word-wrap: break-word;
+        }
+
+        /* Sent Messages (Right Side, Green) */
+        .sent {
+            align-self: flex-end;
+            background-color: #DCF8C6;
+            color: black;
+            border-bottom-right-radius: 0;
+        }
+
+        /* Received Messages (Left Side, White) */
+        .received {
+            align-self: flex-start;
+            background-color: white;
+            border-bottom-left-radius: 0;
+        }
+
+        /* Fixed Footer */
+        .chat-footer {
+            display: flex;
+            padding: 10px;
+            background: #FFFFFF;
+            border-top: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #075E54;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .chat-footer button {
+            background: #128C7E;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .chat-footer button:hover {
+            background: #0a7269;
+        }
+
+        /* Scroll Behavior */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            Chat Room: {{ room_name }}
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-footer">
+            <input id="chat-message-input" type="text" placeholder="Type a message..." />
+            <button id="chat-message-submit">➤</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const roomName = "{{ room_name }}"; 
+            const username = "{{ user.username }}"; 
+            let chatSocket = null;
+
+            function connectWebSocket() {
+                chatSocket = new WebSocket(
+                    `ws://${window.location.host}/ws/chat/${roomName}/`
+                );
+
+                chatSocket.onopen = () => console.log("WebSocket connected");
+
+                chatSocket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    console.log("Message received:", data);
+
+                    if (data.username && data.message) {
+                        appendMessage(data.username, data.message, data.username === username);
+                    }
+                };
+
+                chatSocket.onclose = (event) => {
+                    console.warn("WebSocket closed:", event);
+                    setTimeout(connectWebSocket, 3000);
+                };
+
+                chatSocket.onerror = (e) => console.error("WebSocket Error:", e);
+            }
+
+            connectWebSocket();
+
+            document.getElementById("chat-message-submit").onclick = sendMessage;
+            document.getElementById("chat-message-input").addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                const messageInput = document.getElementById("chat-message-input");
+                const message = messageInput.value.trim();
+
+                if (message !== "") {
+                    const encryptedMessage = encryptMessage(message);
+                    const payload = {
+                        username: username,
+                        message: encryptedMessage
+                    };
+
+                    if (chatSocket.readyState === WebSocket.OPEN) {
+                        chatSocket.send(JSON.stringify(payload));
+                        messageInput.value = "";
+                    } else {
+                        console.error("WebSocket is not connected.");
+                    }
+                }
+            }
+
+            function appendMessage(sender, message, isSentByUser) {
+                const chatMessages = document.getElementById("chat-messages");
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", isSentByUser ? "sent" : "received");
+                messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function encryptMessage(message) {
+                return message;
+            }
+        });
+    </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e5ddd5; /* Beige background now applied to chat area */
+        }
+
+        /* Full-Screen Chat Container */
+        .chat-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fixed Header */
+        .chat-header {
+            background: #075E54;
+            color: white;
+            padding: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Scrollable Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Message Bubbles */
+        .message {
+            max-width: 75%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 1rem;
+            word-wrap: break-word;
+        }
+
+        /* Sent Messages (Right Side, Green) */
+        .sent {
+            align-self: flex-end;
+            background-color: #DCF8C6;
+            color: black;
+            border-bottom-right-radius: 0;
+        }
+
+        /* Received Messages (Left Side, White) */
+        .received {
+            align-self: flex-start;
+            background-color: white;
+            border-bottom-left-radius: 0;
+        }
+
+        /* Fixed Footer */
+        .chat-footer {
+            display: flex;
+            padding: 10px;
+            background: #FFFFFF;
+            border-top: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #075E54;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .chat-footer button {
+            background: #128C7E;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .chat-footer button:hover {
+            background: #0a7269;
+        }
+
+        /* Scroll Behavior */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const roomName = "{{ room_name }}"; 
+            const username = "{{ user.username }}"; 
+            let chatSocket = null;
+
+            function connectWebSocket() {
+                chatSocket = new WebSocket(
+                    `ws://${window.location.host}/ws/chat/${roomName}/`
+                );
+
+                chatSocket.onopen = () => console.log("WebSocket connected");
+
+                chatSocket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    console.log("Message received:", data);
+
+                    if (data.username && data.message) {
+                        appendMessage(data.username, data.message, data.username === username);
+                    }
+                };
+
+                chatSocket.onclose = (event) => {
+                    console.warn("WebSocket closed:", event);
+                    setTimeout(connectWebSocket, 3000);
+                };
+
+                chatSocket.onerror = (e) => console.error("WebSocket Error:", e);
+            }
+
+            connectWebSocket();
+
+            document.getElementById("chat-message-submit").onclick = sendMessage;
+            document.getElementById("chat-message-input").addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                const messageInput = document.getElementById("chat-message-input");
+                const message = messageInput.value.trim();
+
+                if (message !== "") {
+                    const encryptedMessage = encryptMessage(message);
+                    const payload = {
+                        username: username,
+                        message: encryptedMessage
+                    };
+
+                    if (chatSocket.readyState === WebSocket.OPEN) {
+                        chatSocket.send(JSON.stringify(payload));
+                        //appendMessage("You", message, true);
+                        messageInput.value = "";
+                    } else {
+                        console.error("WebSocket is not connected.");
+                    }
+                }
+            }
+
+            function appendMessage(sender, message, isSentByUser) {
+                const chatMessages = document.getElementById("chat-messages");
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", isSentByUser ? "sent" : "received");
+                messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function encryptMessage(message) {
+                return message;
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Chat Room: {{ room_name }}
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-footer">
+            <input id="chat-message-input" type="text" placeholder="Type a message..." />
+            <button id="chat-message-submit">➤</button>
+        </div>
+    </div>
+</body>
+</html> {% endcomment %}
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} <!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat Room</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const roomName = "{{ room_name }}"; // Room name from Django context
+        const username = "{{ user.username }}"; // Fetch the username dynamically
+        let chatSocket = null;
+
+        function connectWebSocket() {
+          chatSocket = new WebSocket(
+            `ws://${window.location.host}/ws/chat/${roomName}/`
+          );
+
+          // WebSocket connected
+          chatSocket.onopen = () => {
+            console.log("WebSocket connected");
+          };
+
+          // WebSocket message received
+          chatSocket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log("Message received:", data);
+
+            if (data.error) {
+              console.error("Error:", data.error);
+              return;
+            }
+
+            if (data.username && data.message) {
+              appendMessage(data.username, data.message);
+            }
+          };
+
+          // WebSocket connection closed (attempt to reconnect)
+          chatSocket.onclose = (event) => {
+            console.warn("WebSocket connection closed:", event);
+            setTimeout(connectWebSocket, 3000); // Attempt to reconnect after 3s
+          };
+
+          // WebSocket error
+          chatSocket.onerror = (e) => {
+            console.error("WebSocket Error:", e);
+          };
+        }
+
+        connectWebSocket(); // Initialize WebSocket connection
+
+        // Send message when the button is clicked
+        document.getElementById("chat-message-submit").onclick = function () {
+          sendMessage();
+        };
+
+        // Send message when Enter key is pressed
+        document.getElementById("chat-message-input").addEventListener("keypress", function (event) {
+          if (event.key === "Enter") {
+            sendMessage();
+          }
+        });
+
+        function sendMessage() {
+          const messageInput = document.getElementById("chat-message-input");
+          const message = messageInput.value.trim();
+
+          if (message !== "") {
+            const encryptedMessage = encryptMessage(message); // Implement encryption
+            const paddingLength = calculatePaddingLength(encryptedMessage);
+
+            const payload = {
+              username: username,
+              message: encryptedMessage,
+              padding_length: paddingLength,
+            };
+
+            if (chatSocket.readyState === WebSocket.OPEN) {
+              chatSocket.send(JSON.stringify(payload));
+              //appendMessage("You", message); // Show unencrypted message for sender
+              messageInput.value = ""; // Clear input
+            } else {
+              console.error("WebSocket is not connected.");
+            }
+          }
+        }
+
+        // Append message to chat log
+        function appendMessage(sender, message) {
+          const chatLog = document.getElementById("chat-log");
+          const messageElement = document.createElement("div");
+          messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+          chatLog.appendChild(messageElement);
+          chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to the latest message
+        }
+
+        // Placeholder encryption function (Replace with actual encryption logic)
+        function encryptMessage(message) {
+          return message; // Replace with N-TEA + AES encryption
+        }
+
+        // Placeholder padding calculation (Modify according to encryption scheme)
+        function calculatePaddingLength(encryptedMessage) {
+          return 16; // Example padding length
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <h2>Chat Room: {{ room_name }}</h2>
+    <div id="chat-log" style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px;"></div>
+    
+    <input id="chat-message-input" type="text" placeholder="Type your message..." />
+    <button id="chat-message-submit">Send</button><br /><br />
+  </body>
+</html> {% endcomment %}

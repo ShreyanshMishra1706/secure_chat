@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="about-section">
+    <h1>About Secure Chat</h1><br/>
+    <p><strong>Secure Chat</strong> is a college project built by final-year students aiming to create a chat application with a focus on security and privacy. This project is developed to cater to individuals and organizations who prioritize secure communication without leaving digital footprints.</p><br/><br/>
+
+    <h2>Why was this project built?</h2><br/>
+    <p>As technology advances, big-tech companies collect more and more personal data about us. This is concerning for individuals and organizations that want to securely share sensitive information without the fear of it being tracked or misused. Our project uses Dual encryption (<i>N-TEA and AES</i>) to ensure that communication remains secure, private, and without any digital footprints. We, as engineering students, wanted to contribute to society by addressing these privacy concerns. Adding even a small contribution to secure communication is meaningful to us.</p><br/><br/>
+
+    <h2>How and When was this project built?</h2><br/>
+    <p>This project was built as part of our final year college project. The main goal was to design a secure chat application that uses advanced encryption techniques to safeguard messages from any unauthorized access. We started working on it in our final year, combining our knowledge of encryption algorithms and real-time web technologies to create a solution that aligns with our vision for a more private and secure digital world.</p><br/><br/>
+
+    <h2>Our Team</h2><br/>
+    <div class="team-members">
+        <div class="team-member">
+            <div class="member-info">
+                <div class="member-photo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/120px-User-avatar.svg.png?20201213175635" alt="Ramprasad Bharadwaj S N">
+                </div>
+                <div class="member-details">
+                    <h3>Ramprasad Bharadwaj S N</h3>
+                    <p><strong>Branch:</strong> Information Science and Engineering</p>
+                    <p><strong>Contribution:</strong> Dual encryption modelling | Backend and integration</p>
+                </div>
+            </div>
+        </div>
+        <div class="team-member">
+            <div class="member-info">
+                <div class="member-photo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/120px-User-avatar.svg.png?20201213175635" alt="Shreekrishna G S">
+                </div>
+                <div class="member-details">
+                    <h3>Shreekrishna G S</h3>
+                    <p><strong>Branch:</strong> Information Science and Engineering</p>
+                    <p><strong>Contribution:</strong> Idea Formulation | Presentation</p>
+                </div>
+            </div>
+        </div>
+        <div class="team-member">
+            <div class="member-info">
+                <div class="member-photo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/120px-User-avatar.svg.png?20201213175635" alt="Shreyansh Mishra">
+                </div>
+                <div class="member-details">
+                    <h3>Shreyansh Mishra</h3>
+                    <p><strong>Branch:</strong> Information Science and Engineering</p>
+                    <p><strong>Contribution:</strong> Frontend Developer | Lead</p>
+                </div>
+            </div>
+        </div>
+        <div class="team-member">
+            <div class="member-info">
+                <div class="member-photo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/120px-User-avatar.svg.png?20201213175635" alt="Sinchana S">
+                </div>
+                <div class="member-details">
+                    <h3>Sinchana S</h3>
+                    <p><strong>Branch:</strong> Information Science and Engineering</p>
+                    <p><strong>Contribution:</strong> Literature Survey | Flowchart design | Documentation and report</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .about-section {
+        text-align: left;
+        padding: 60px 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .about-section h1, .about-section h2 {
+        color: #075E54;
+    }
+    .about-section p {
+        text-align: justify;
+        line-height: 1.6;
+    }
+
+    .team-members {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);  /* 2 members per row */
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .team-member {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .member-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .member-photo img {
+        width: 75px;
+        height: 75px;
+        border-radius: 100%;
+    }
+
+    .member-details h3 {
+        color: #128C7E;
+        margin-bottom: 10px;
+    }
+
+    .member-details p {
+        margin: 5px 0;
+    }
+</style>
+
+{% endblock %}

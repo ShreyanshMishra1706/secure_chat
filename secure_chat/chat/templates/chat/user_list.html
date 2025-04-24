@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}Find & Chat{% endblock %}
+
+{% block content %}
+    <style>
+        /* Center the content */
+        .user-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Search Input */
+        #search {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        /* User List */
+        #user-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #user-list li {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s;
+        }
+
+        #user-list li:hover {
+            background: #e0e0e0;
+        }
+
+        /* Chat Link */
+        #user-list a {
+            text-decoration: none;
+            color: #075E54;
+            font-weight: bold;
+        }
+
+        /* New Message Indicator */
+        .new-message {
+            color: red;
+            font-size: 0.9rem;
+        }
+    </style>
+
+    <div class="user-container">
+        <h2>Select a User to Chat</h2>
+        <input type="text" id="search" placeholder="Search user..." onkeyup="filterUsers()">
+        
+        <ul id="user-list">
+            {% for user, room in users_rooms %}
+            <li>
+                <a href="{% url 'chat:chat_room' room_name=room %}">
+                    {{ user.username }}
+                </a>
+                {% if user.username in active_chats %}
+                    <span class="new-message">🔴 New Message</span> 
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        function filterUsers() {
+            let input = document.getElementById("search").value.toLowerCase();
+            let users = document.getElementById("user-list").getElementsByTagName("li");
+            for (let i = 0; i < users.length; i++) {
+                let username = users[i].textContent.toLowerCase();
+                users[i].style.display = username.includes(input) ? "" : "none";
+            }
+        }
+    </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select a User</title>
+    <style>
+        /* General reset and box-sizing */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f9ff; /* Light blue background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #007bff; /* Vibrant blue for the title */
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 2px solid #007bff;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+            background-color: #f0faff; /* Light blue input background */
+        }
+
+        input[type="text"]:focus {
+            border-color: #004f8c; /* Darker blue on focus */
+            background-color: #ffffff; /* White background on focus */
+        }
+
+        #user-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #user-list li {
+            background-color: #f9f9fb; /* Soft light background for users */
+            padding: 16px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+            font-size: 1.1rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        #user-list li:hover {
+            background-color: #e6f7ff; /* Slight blue on hover */
+            border: 1px solid #b3d7ff; /* Subtle border change */
+        }
+
+        #user-list a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+        }
+
+        #user-list span {
+            font-size: 1.5rem;
+            color: #ff4d4d; /* Red color for new messages */
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.7rem;
+            }
+
+            input[type="text"] {
+                font-size: 0.9rem;
+            }
+
+            #user-list li {
+                padding: 12px;
+            }
+        }
+
+        /* Additional background and accent colors */
+        .container {
+            background-color: #ffffff;
+            box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        input[type="text"]:focus {
+            border-color: #005bb5; /* Deep blue on focus */
+            background-color: #ffffff;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Select a User to Chat</h2>
+        <input type="text" id="search" placeholder="Search user..." onkeyup="filterUsers()">
+        <ul id="user-list">
+            {% for user, room in users_rooms %}
+            <li>
+                <a href="{% url 'chat:chat_room' room_name=room %}">
+                    {{ user.username }}
+                </a>
+                {% if user.username in active_chats %}
+                <span>🔴</span> <!-- Show a red dot if there’s a new message -->
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        function filterUsers() {
+            let input = document.getElementById("search").value.toLowerCase();
+            let users = document.getElementById("user-list").getElementsByTagName("li");
+            for (let i = 0; i < users.length; i++) {
+                let username = users[i].textContent.toLowerCase();
+                users[i].style.display = username.includes(input) ? "" : "none";
+            }
+        }
+    </script>
+</body>
+</html> {% endcomment %}

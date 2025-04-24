@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Secure Chat{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>Welcome to Secure Chat</h1>
+    <p>Your privacy matters. Chat securely with no digital footprints.</p>
+    <a href="{% url 'chat:register' %}" class="btn">Get Started</a>
+</div>
+
+<div class="features-section">
+    <h2>Why Choose Secure Chat?</h2><br/>
+    <div class="features">
+        <div class="feature">
+            <h3>🔒 Dual Encryption</h3><br/>
+            <p>We use <b>N-TEA and AES encryption</b> to ensure optimal security for all your messages.</p>
+        </div>
+        <div class="feature">
+            <h3>🚀 Real-time Messaging</h3><br/>
+            <p>Enjoy seamless chatting with real-time message delivery.</p>
+        </div>
+        <div class="feature">
+            <h3>🕵️ Anonymous & Private</h3><br/>
+            <p>Only your <b>username is displayed</b>, keeping your identity protected.</p>
+        </div>
+        <div class="feature">
+            <h3>📜 No Chat History</h3><br/>
+            <p>We <b>don’t store messages<b>, ensuring there are </b>no digital footprints<b> left behind.</p>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section">
+    <h2>Ready to Chat Securely?</h2><br/>
+    <p>Join Secure Chat today and experience true private messaging.</p><br/>
+    <a href="{% url 'chat:register' %}" class="btn">Sign Up Now</a>
+</div>
+
+<style>
+    .hero-section {
+        text-align: center;
+        padding: 80px 20px;
+        background: #075E54;
+        color: white;
+    }
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    .hero-section p {
+        font-size: 1.2rem;
+        margin: 15px 0;
+    }
+    .btn {
+        display: inline-block;
+        background: #128C7E;
+        color: white;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    .btn:hover {
+        background: #0a7269;
+    }
+    .features-section {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .feature {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .cta-section {
+        text-align: center;
+        padding: 50px 20px;
+        background: #e5ddd5;
+    }
+</style>
+{% endblock %}
